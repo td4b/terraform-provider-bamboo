@@ -16,7 +16,7 @@ description: |-
 terraform {
   required_providers {
     bamboo = {
-      source = "github.com/td4b/terraform-provider-bamboo"
+      source = "td4b/bamboo"
     }
   }
 }
