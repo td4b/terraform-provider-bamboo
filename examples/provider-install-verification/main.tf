@@ -3,7 +3,7 @@ terraform {
     bamboo = {
       source = "hashicorp.com/edu/bamboo"
     }
-    
+
   }
 }
 
@@ -17,8 +17,8 @@ data "bamboo_users" "bambootest" {}
 
 module "ad_test" {
   for_each = data.bamboo_users.bambootest
-  source = "./test-module"
-  values = each.value
+  source   = "./test-module"
+  values   = each.value
 }
 
 # output "result" {
