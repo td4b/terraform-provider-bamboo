@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     bamboo = {
-      source = "hashicorp.com/edu/bamboo"
+      source = "github.com/td4b/terraform-provider-bamboo"
     }
 
   }
