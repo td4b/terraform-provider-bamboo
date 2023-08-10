@@ -89,7 +89,11 @@ func (d *UsersDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	tflog.Info(ctx, "<diag> Trying to get users via UsersModel!")
 	users, err := d.client.Getusers()
 	if err != nil {
-		tflog.Info(ctx, "<diag> got an error!"+err.Error())
+		resp.Diagnostics.AddError(
+			"Unable to Read HashiCups Coffees",
+			err.Error(),
+		)
+		return
 	}
 	// Map response body to model
 	for _, user := range users {
@@ -104,7 +108,8 @@ func (d *UsersDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		}
 		state.Users = append(state.Users, userState)
 	}
-	tflog.Debug(ctx, "<diag> Got State: "+fmt.Sprintf("%s", state.Users))
+	tflog.Info(ctx, "<diag> Got Users and Updated UsersModel state!")
+	//tflog.Debug(ctx, "<diag> Got State: "+fmt.Sprintf("%s", state.Users))
 	//Set state
 	diags := resp.State.Set(ctx, &state)
 	resp.Diagnostics.Append(diags...)
