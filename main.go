@@ -44,7 +44,7 @@ func main() {
 		// provider address is used in these tutorials in conjunction with a
 		// specific Terraform CLI configuration for manual development testing
 		// of this provider.
-		Address: "github.com/td4b/terraform-provider-bamboo",
+		Address: "hashicorp.com/edu/bamboo",
 		Debug:   debug,
 	}
 

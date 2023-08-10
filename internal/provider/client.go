@@ -25,7 +25,7 @@ type User struct {
 	LastLogin  string `json:"lastLogin"`
 }
 
-type Users []User
+type Users map[string]User
 
 func (c *BambooClient) Getusers() (Users, error) {
 	resp, err := c.HTTPClient.Get(c.HostURL + "/" + c.Company + "/v1/meta/users/")
@@ -46,11 +46,7 @@ func (c *BambooClient) Getusers() (Users, error) {
 		if err != nil {
 			return nil, err
 		}
-		var usrlst Users
-		for _, user := range usrmap {
-			usrlst = append(usrlst, user)
-		}
-		return usrlst, nil
+		return usrmap, nil
 	} else {
 		return nil, fmt.Errorf("Invalid Response code from server: %d", resp.StatusCode)
 	}

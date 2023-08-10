@@ -22,7 +22,7 @@ type UserModel struct {
 
 // coffeesDataSourceModel maps the data source schema data.
 type UserDataSourceModel struct {
-	Users []UserModel `tfsdk:"users"`
+	Users map[string]UserModel `tfsdk:"users"`
 }
 
 // Ensure the implementation satisfies the expected interfaces.
@@ -50,7 +50,7 @@ func (d *UsersDataSource) Metadata(_ context.Context, req datasource.MetadataReq
 func (d *UsersDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
-			"users": schema.ListNestedAttribute{
+			"users": schema.MapNestedAttribute{
 				Computed: true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -85,7 +85,9 @@ func (d *UsersDataSource) Schema(_ context.Context, _ datasource.SchemaRequest, 
 
 // Read refreshes the Terraform state with the latest data.
 func (d *UsersDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var state UserDataSourceModel
+	state := UserDataSourceModel{
+		Users: make(map[string]UserModel), // Initialize the map here
+	}
 	tflog.Info(ctx, "<diag> Trying to get users via UsersModel!")
 	users, err := d.client.Getusers()
 	if err != nil {
@@ -96,7 +98,7 @@ func (d *UsersDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 		return
 	}
 	// Map response body to model
-	for _, user := range users {
+	for key, user := range users {
 		userState := UserModel{
 			ID:         types.Int64Value(int64(user.ID)),
 			EmployeeID: types.Int64Value(int64(user.EmployeeID)),
@@ -106,7 +108,8 @@ func (d *UsersDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 			Status:     types.StringValue(user.Status),
 			LastLogin:  types.StringValue(user.LastLogin),
 		}
-		state.Users = append(state.Users, userState)
+		state.Users[key] = userState
+		//state.Users = append(state.Users, userState)
 	}
 	tflog.Info(ctx, "<diag> Got Users and Updated UsersModel state!")
 	//tflog.Debug(ctx, "<diag> Got State: "+fmt.Sprintf("%s", state.Users))

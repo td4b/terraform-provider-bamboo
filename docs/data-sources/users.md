@@ -17,7 +17,7 @@ description: |-
 
 ### Optional
 
-- `users` (Attributes List) (see [below for nested schema](#nestedatt--users))
+- `users` (Attributes Map) (see [below for nested schema](#nestedatt--users))
 
 <a id="nestedatt--users"></a>
 ### Nested Schema for `users`
