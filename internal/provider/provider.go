@@ -82,27 +82,27 @@ func (p *bambooProvider) Configure(ctx context.Context, req provider.ConfigureRe
 	if config.Host.IsUnknown() {
 		resp.Diagnostics.AddAttributeError(
 			path.Root("host"),
-			"Unknown HashiCups API Host",
-			"The provider cannot create the HashiCups API client as there is an unknown configuration value for the HashiCups API host. "+
-				"Either target apply the source of the value first, set the value statically in the configuration, or use the HASHICUPS_HOST environment variable.",
+			"Unknown Bamboo API Host",
+			"The provider cannot create the Bamboo API client as there is an unknown configuration value for the Bamboo API host. "+
+				"Either target apply the source of the value first, set the value statically in the configuration, or use the BAMBOO_HOST environment variable.",
 		)
 	}
 
 	if config.Company.IsUnknown() {
 		resp.Diagnostics.AddAttributeError(
-			path.Root("username"),
-			"Unknown HashiCups API Username",
-			"The provider cannot create the HashiCups API client as there is an unknown configuration value for the HashiCups API username. "+
-				"Either target apply the source of the value first, set the value statically in the configuration, or use the HASHICUPS_USERNAME environment variable.",
+			path.Root("company"),
+			"Unknown Bamboo API Company",
+			"The provider cannot create the Bamboo API client as there is an unknown configuration value for the Bamboo API company. "+
+				"Either target apply the source of the value first, set the value statically in the configuration, or use the BAMBOO_COMPANY environment variable.",
 		)
 	}
 
 	if config.Apikey.IsUnknown() {
 		resp.Diagnostics.AddAttributeError(
-			path.Root("password"),
-			"Unknown HashiCups API Password",
-			"The provider cannot create the HashiCups API client as there is an unknown configuration value for the HashiCups API password. "+
-				"Either target apply the source of the value first, set the value statically in the configuration, or use the HASHICUPS_PASSWORD environment variable.",
+			path.Root("apikey"),
+			"Unknown Bamboo API Key",
+			"The provider cannot create the Bamboo API client as there is an unknown configuration value for the Bamboo API key. "+
+				"Either target apply the source of the value first, set the value statically in the configuration, or use the BAMBOO_APIKEY environment variable.",
 		)
 	}
 
@@ -114,9 +114,9 @@ func (p *bambooProvider) Configure(ctx context.Context, req provider.ConfigureRe
 	// Default values to environment variables, but override
 	// with Terraform configuration value if set.
 
-	host := os.Getenv("HASHICUPS_HOST")
-	company := os.Getenv("HASHICUPS_USERNAME")
-	apikey := os.Getenv("HASHICUPS_PASSWORD")
+	host := os.Getenv("BAMBOO_HOST")
+	company := os.Getenv("BAMBOO_COMPANY")
+	apikey := os.Getenv("BAMBOO_APIKEY")
 
 	if !config.Host.IsNull() {
 		host = config.Host.ValueString()
@@ -138,9 +138,9 @@ func (p *bambooProvider) Configure(ctx context.Context, req provider.ConfigureRe
 	if host == "" {
 		resp.Diagnostics.AddAttributeError(
 			path.Root("host"),
-			"Missing HashiCups API Host",
-			"The provider cannot create the HashiCups API client as there is a missing or empty value for the HashiCups API host. "+
-				"Set the host value in the configuration or use the HASHICUPS_HOST environment variable. "+
+			"Missing Bamboo API Host",
+			"The provider cannot create the Bamboo API client as there is a missing or empty value for the Bamboo API host. "+
+				"Set the host value in the configuration or use the BAMBOO_HOST environment variable. "+
 				"If either is already set, ensure the value is not empty.",
 		)
 	}
@@ -148,9 +148,9 @@ func (p *bambooProvider) Configure(ctx context.Context, req provider.ConfigureRe
 	if company == "" {
 		resp.Diagnostics.AddAttributeError(
 			path.Root("company"),
-			"Missing HashiCups API Username",
-			"The provider cannot create the HashiCups API client as there is a missing or empty value for the HashiCups API username. "+
-				"Set the username value in the configuration or use the HASHICUPS_USERNAME environment variable. "+
+			"Missing Bamboo API Company",
+			"The provider cannot create the Bamboo API client as there is a missing or empty value for the Bamboo API company. "+
+				"Set the company value in the configuration or use the BAMBOO_COMPANY environment variable. "+
 				"If either is already set, ensure the value is not empty.",
 		)
 	}
@@ -158,9 +158,9 @@ func (p *bambooProvider) Configure(ctx context.Context, req provider.ConfigureRe
 	if apikey == "" {
 		resp.Diagnostics.AddAttributeError(
 			path.Root("apikey"),
-			"Missing HashiCups API Password",
-			"The provider cannot create the HashiCups API client as there is a missing or empty value for the HashiCups API password. "+
-				"Set the password value in the configuration or use the HASHICUPS_PASSWORD environment variable. "+
+			"Missing Bamboo API Key",
+			"The provider cannot create the Bamboo API client as there is a missing or empty value for the Bamboo API key. "+
+				"Set the apikey value in the configuration or use the BAMBOO_APIKEY environment variable. "+
 				"If either is already set, ensure the value is not empty.",
 		)
 	}
@@ -175,10 +175,10 @@ func (p *bambooProvider) Configure(ctx context.Context, req provider.ConfigureRe
 	client, err := NewClient(&host, &company, &apikey)
 	if err != nil {
 		resp.Diagnostics.AddError(
-			"Unable to Create HashiCups API Client",
-			"An unexpected error occurred when creating the HashiCups API client. "+
+			"Unable to Create Bamboo API Client",
+			"An unexpected error occurred when creating the Bamboo API client. "+
 				"If the error is not clear, please contact the provider developers.\n\n"+
-				"HashiCups Client Error: "+err.Error(),
+				"Bamboo Client Error: "+err.Error(),
 		)
 		return
 	}
